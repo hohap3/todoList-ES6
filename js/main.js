@@ -1,5 +1,9 @@
-const todoList = [];
-const todoCompletedList = [];
+import {
+  sortNameByAtoZ,
+  sortNameByZtoA,
+  renderTodoList,
+} from "./utils/index.js";
+import { todoList, todoCompletedList } from "./constants/constants.js";
 
 function addTodoList({ cardAddClass, buttonID, inputID }) {
   const cardAddEle = document.querySelector(cardAddClass);
@@ -27,59 +31,7 @@ function addTodoList({ cardAddClass, buttonID, inputID }) {
   }
 }
 
-function renderTodoList({ todoListID, todoList }) {
-  if (!Array.isArray(todoList)) return;
-
-  if (todoListID === "#todo") {
-    const todoEle = document.querySelector(todoListID);
-    if (!todoEle) return;
-
-    let html = ``;
-
-    todoList.forEach((todo) => {
-      html += `<li data-id=${todo.id} >
-      <span>${todo.todoName}</span>
-  
-      <div class="buttons">
-        <button class="remove" onclick="handleRemoveTodo('${todo.id}','${todoListID}')" >
-          <i class="fas fa-trash-alt"></i>
-        </button>
-       <button class="complete" onclick="handleAddRemoveCompletedElement('${todo.id}','${todoListID}')" >
-        <i class="far fa-check-circle"></i>
-      </button>
-      
-      </div>
-    </li> `;
-    });
-
-    todoEle.innerHTML = html;
-  } else {
-    const todoEle = document.querySelector(todoListID);
-    if (!todoEle) return;
-
-    let html = ``;
-
-    todoList.forEach((todo) => {
-      html += `<li data-id=${todo.id} >
-      <span>${todo.todoName}</span>
-  
-      <div class="buttons">
-        <button class="remove" onclick="handleRemoveTodo('${todo.id}','${todoListID}')">
-          <i class="fas fa-trash-alt"></i>
-        </button>
-       <button class="complete" onclick="handleAddRemoveCompletedElement('${todo.id}','${todoListID}')"  >
-        <i class="fas fa-check-circle"></i>
-      </button>
-      
-      </div>
-    </li> `;
-    });
-
-    todoEle.innerHTML = html;
-  }
-}
-
-function handleRemoveTodo(id, todoID) {
+window.handleRemoveTodo = function (id, todoID) {
   if (!id) return;
 
   if (todoID === "#todo") {
@@ -105,9 +57,9 @@ function handleRemoveTodo(id, todoID) {
     const liItem = todoEle.querySelector(`li[data-id="${id}"]`);
     if (liItem) liItem.remove();
   }
-}
+};
 
-function handleAddRemoveCompletedElement(id, todoID) {
+window.handleAddRemoveCompletedElement = function (id, todoID) {
   if (!id) return;
 
   if (todoID === "#todo") {
@@ -139,43 +91,17 @@ function handleAddRemoveCompletedElement(id, todoID) {
 
     renderTodoList({ todoListID: "#todo", todoList });
   }
-}
+};
 
-function sortNameByAtoZ({ button }) {
-  const sortBtn = document.querySelector(button);
-  if (!sortBtn) return;
-
-  sortBtn.addEventListener("click", () => {
-    if (todoList.length < 1) return;
-
-    const newTodoList = [...todoList];
-
-    newTodoList.sort((a, b) => a.todoName.localeCompare(b.todoName));
-
-    renderTodoList({ todoListID: "#todo", todoList: newTodoList });
+function main() {
+  addTodoList({
+    cardAddClass: ".card__add",
+    buttonID: "#addItem",
+    inputID: "#newTask",
   });
+
+  sortNameByAtoZ({ button: "#two", todoList });
+  sortNameByZtoA({ button: "#three", todoList });
 }
 
-function sortNameByZtoA({ button }) {
-  const sortBtn = document.querySelector(button);
-  if (!sortBtn) return;
-
-  sortBtn.addEventListener("click", () => {
-    if (todoList.length < 1) return;
-
-    const newTodoList = [...todoList];
-
-    newTodoList.sort((a, b) => b.todoName.localeCompare(a.todoName));
-
-    renderTodoList({ todoListID: "#todo", todoList: newTodoList });
-  });
-}
-
-addTodoList({
-  cardAddClass: ".card__add",
-  buttonID: "#addItem",
-  inputID: "#newTask",
-});
-
-sortNameByAtoZ({ button: "#two" });
-sortNameByZtoA({ button: "#three" });
+main();
