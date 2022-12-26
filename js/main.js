@@ -93,6 +93,18 @@ window.handleAddRemoveCompletedElement = function (id, todoID) {
   }
 };
 
+function handleSortName({ todoList, mode }) {
+  if (!Array.isArray(todoList) || todoList.length < 1) return;
+
+  const newTodoList = [...todoList];
+
+  if (mode === "Z-A")
+    newTodoList.sort((a, b) => b.todoName.localeCompare(a.todoName));
+  else newTodoList.sort((a, b) => a.todoName.localeCompare(b.todoName));
+
+  renderTodoList({ todoListID: "#todo", todoList: newTodoList });
+}
+
 function main() {
   addTodoList({
     cardAddClass: ".card__add",
@@ -100,8 +112,14 @@ function main() {
     inputID: "#newTask",
   });
 
-  sortNameByAtoZ({ button: "#two", todoList });
-  sortNameByZtoA({ button: "#three", todoList });
+  sortNameByAtoZ({
+    button: "#two",
+    onSubmitClick: () => handleSortName({ todoList, mode: "A-Z" }),
+  });
+  sortNameByZtoA({
+    button: "#three",
+    onSubmitClick: () => handleSortName({ todoList, mode: "Z-A" }),
+  });
 }
 
 main();
