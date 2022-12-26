@@ -15,7 +15,7 @@ function addTodoList({ cardAddClass, buttonID, inputID }) {
       const inputEle = cardAddEle.querySelector(inputID);
       if (!inputEle) return;
       if (inputEle.value === "" || inputEle.value.trim().length < 1) {
-        window.alert("Vui lòng nhập thông tin!");
+        window.alert("Please insert todo");
         inputEle.focus();
 
         return;
